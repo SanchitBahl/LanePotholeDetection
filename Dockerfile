@@ -3,15 +3,14 @@ FROM python:3.10-slim
 WORKDIR /app
 
 # Install system dependencies for OpenCV, FFmpeg, and WebRTC support
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update --fix-missing && apt-get install -y --no-install-recommends \
     libgl1-mesa-glx \
     libglib2.0-0 \
     libsm6 \
     libxext6 \
     libxrender-dev \
     ffmpeg \
-    git \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
 
 # Copy requirements and install Python dependencies
 COPY requirements.txt .
