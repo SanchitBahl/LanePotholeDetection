@@ -1,3 +1,13 @@
+---
+title: Lane & Pothole Detection
+emoji: 🚗
+colorFrom: blue
+colorTo: green
+sdk: docker
+app_file: src/app.py
+pinned: false
+---
+
 # 🚗 Lane & Pothole Detection Web Application
 
 A real-time computer vision application for detecting potholes and lane markings using YOLOv8n and OpenCV. Optimized for mobile browsers with WebRTC streaming and deployed on Hugging Face Spaces.

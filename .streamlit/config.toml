@@ -1,0 +1,18 @@
+[server]
+port = 7860
+address = "0.0.0.0"
+headless = true
+enableXsrfProtection = false
+
+[client]
+toolbarMode = "minimal"
+
+[logger]
+level = "info"
+
+[theme]
+primaryColor = "#0099FF"
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#F0F2F6"
+textColor = "#262730"
+font = "sans serif"

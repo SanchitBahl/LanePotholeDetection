@@ -37,7 +37,6 @@ venv.bak/
 .DS_Store
 
 # Streamlit
-.streamlit/
 .streamlit/secrets.toml
 
 # YOLOv8 models and cache
@@ -60,3 +59,6 @@ Thumbs.db
 # Git
 .git/
 hf-space/
+
+# Markdown
+HF_SPACES_FIX.md
