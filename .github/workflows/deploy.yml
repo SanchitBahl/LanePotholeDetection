@@ -1,0 +1,51 @@
+name: Deploy to Hugging Face Spaces
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Push to Hugging Face Spaces
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_SPACE_REPO: ${{ secrets.HF_SPACE_REPO }}
+        run: |
+          git config --global user.email "deploy@github.com"
+          git config --global user.name "GitHub Deploy"
+          
+          # Clone the Hugging Face Spaces repository
+          git clone https://huggingface.co/spaces/$HF_SPACE_REPO hf-space
+          
+          # Copy files to the HF space directory (excluding .git)
+          cd hf-space
+          git config --global credential.helper store
+          echo "https://deploy:${HF_TOKEN}@huggingface.co" > ~/.git-credentials
+          
+          # Copy all files from current repo to HF space
+          cd ..
+          find . -not -path './.git/*' -not -path './hf-space/.git/*' -not -name '.git' -type f | while read file; do
+            TARGET_FILE="hf-space/${file#./}"
+            mkdir -p "$(dirname "$TARGET_FILE")"
+            cp "$file" "$TARGET_FILE"
+          done
+          
+          # Commit and push to Hugging Face
+          cd hf-space
+          git add -A
+          if ! git diff-index --quiet HEAD --; then
+            git commit -m "Auto-deploy from GitHub: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+            git push https://deploy:${HF_TOKEN}@huggingface.co/spaces/$HF_SPACE_REPO main
+          else
+            echo "No changes to deploy"
+          fi
