@@ -26,7 +26,6 @@ st.markdown("""
     .main {
         max-width: 100%;
     }
-    /* Mobile optimized video container */
     .stApp > header {
         background-color: transparent;
     }
@@ -35,20 +34,6 @@ st.markdown("""
         margin-top: 0.5rem;
         margin-bottom: 0.5rem;
         font-size: 1.8rem;
-    }
-    .stMetric {
-        text-align: center;
-    }
-    /* Alert styling */
-    .alert-danger {
-        background-color: #ffcccc;
-        border: 2px solid #ff0000;
-        border-radius: 0.5rem;
-        padding: 0.75rem;
-        margin: 0.5rem 0;
-        text-align: center;
-        font-weight: bold;
-        color: #cc0000;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -107,15 +92,9 @@ webrtc_streamer(
     rtc_configuration=rtc_configuration,
     media_stream_constraints={
         "video": {
-            "mandatory": {
-                "minWidth": 320,
-                "minHeight": 240,
-                "maxWidth": 640,
-                "maxHeight": 480
-            },
-            "optional": [
-                {"facingMode": "environment"},  # Default to rear camera
-            ]
+            "width": {"ideal": 640},
+            "height": {"ideal": 480},
+            "facingMode": "environment"
         },
         "audio": False,
     },
@@ -128,31 +107,6 @@ webrtc_streamer(
 
 # Statistics and Alerts
 st.subheader("📊 Detection Statistics")
-
-col1, col2 = st.columns(2)
-
-with col1:
-    stats = st.session_state.detection_engine.get_stats()
-    st.metric(
-        "🕳️ Potholes Detected",
-        stats['last_potholes'],
-        delta=None if stats['last_potholes'] == 0 else f"+{stats['last_potholes']}"
-    )
-
-with col2:
-    st.metric(
-        "🛣️ Lane Lines",
-        stats['last_lanes'],
-        delta=None if stats['last_lanes'] == 0 else f"+{stats['last_lanes']}"
-    )
-
-# Alert for detected potholes
-if detect_potholes and stats['last_potholes'] > 0:
-    st.markdown(
-        f'<div class="alert-danger">⚠️ WARNING: {stats["last_potholes"]} POTHOLE(S) DETECTED!</div>',
-        unsafe_allow_html=True
-    )
-
 # Instructions
 st.divider()
 st.subheader("📱 Mobile Instructions")
@@ -160,7 +114,9 @@ st.markdown("""
 1. **Allow Camera Access** - Grant permission to your device camera
 2. **Choose Detection Mode** - Enable/disable lanes and potholes as needed
 3. **Position Device** - Aim camera at the road ahead
-4. **Monitor Alerts** - Watch for pothole warnings below the video
+4. **Watch the Feed** - Real-time annotations show:
+   - 🔴 Red bounding boxes for potholes
+   - 🟢 Green lane markers for road lanes
 
 **Tips for Best Results:**
 - Good natural lighting improves detection accuracy
