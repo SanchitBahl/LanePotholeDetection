@@ -6,7 +6,7 @@ Mobile-first UI for lane and pothole detection.
 import streamlit as st
 from streamlit_webrtc import WebRtcMode, RTCConfiguration, webrtc_streamer
 import av
-from src.detection import DetectionEngine
+from detection import DetectionEngine
 
 
 # Page configuration
