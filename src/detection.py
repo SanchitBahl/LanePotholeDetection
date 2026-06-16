@@ -25,10 +25,6 @@ class DetectionEngine:
         # Download and load YOLOv8n pretrained model
         self.model = YOLO('yolov8n.pt')
         self.class_names = self.model.names
-        
-        # Detection stats for UI
-        self.last_detection_count = 0
-        self.last_lanes_count = 0
 
     def detect_potholes(self, frame: np.ndarray) -> tuple:
         """
@@ -81,7 +77,6 @@ class DetectionEngine:
                     2
                 )
         
-        self.last_detection_count = len(detections)
         return annotated_frame, detections
 
     def detect_lanes(self, frame: np.ndarray) -> tuple:
@@ -135,7 +130,6 @@ class DetectionEngine:
                 lanes_list.append(((x1, y1), (x2, y2)))
                 # Draw lane line in green
                 cv2.line(annotated_frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
-        
         self.last_lanes_count = len(lanes_list)
         return annotated_frame, lanes_list
 
@@ -197,10 +191,3 @@ class DetectionEngine:
             return av.VideoFrame.from_ndarray(processed_image, format="bgr24")
         
         return callback
-
-    def get_stats(self) -> dict:
-        """Return latest detection statistics."""
-        return {
-            'last_potholes': self.last_detection_count,
-            'last_lanes': self.last_lanes_count
-        }
